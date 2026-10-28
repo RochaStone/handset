@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Pocket Post · N°01</title>
+<meta name="description" content="The first Pocket Post from Juniper Vale&#x27;s kiln studio in Port Halcyon, as a phone you can play.">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>/* handset: the shared structure. Motif files set the colours of the parts; style.json sets the tokens.
+   No glow, no text shadow, no coloured shadow. Hard ink shadows only, like a print on a desk. */
+:root {
+  --ground: #50163C; --wine: #682047; --candy: #FE9DCA; --paper: #FFE3F1; --cream: #FFF7F4;
+  --ink: #3B1230; --marker: #C2246E; --plum: #50163C; --gold: #E9B949;
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --body: "Fraunces", Georgia, serif;
+  --label: "Bricolage Grotesque", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace;
+  --scrawl: "Permanent Marker", "Marker Felt", "Comic Sans MS", cursive;
+  --pixel: "Silkscreen", "Pixelify Sans", ui-monospace, monospace;
+  /* parts, overridden per motif */
+  --page-bg: var(--ground); --page-ink: var(--cream);
+  --shell: var(--ink); --shell-edge: var(--ink); --shell-ink: var(--cream);
+  --lcd: var(--plum); --lcd-ink: var(--cream); --lcd-dim: color-mix(in srgb, var(--cream) 55%, transparent);
+  --lcd-hi: var(--candy); --lcd-hi-ink: var(--ink); --lcd-font: var(--pixel); --lcd-body: var(--mono);
+  --key: var(--wine); --key-ink: var(--cream); --key-edge: var(--ink);
+  --key-hot: var(--candy); --key-hot-ink: var(--ink);
+  --soft: var(--cream); --soft-ink: var(--ink);
+  --game-bg: var(--plum); --game-ink: var(--cream); --game-apple: var(--candy);
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--page-bg); color: var(--page-ink); font-family: var(--label); line-height: 1.5;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden; min-height: 100vh; }
+:focus-visible { outline: 3px solid var(--candy); outline-offset: 2px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.stage { display: flex; flex-direction: column; align-items: center; gap: var(--s4); padding: var(--s5) var(--s4) var(--s6); }
+.deck { max-width: 46ch; text-align: center; font-family: var(--body); font-size: 16px; }
+.deck b { font-family: var(--label); font-weight: 800; }
+
+/* ---------- the phone ---------- */
+.phone { width: min(380px, 100%); background: var(--shell); color: var(--shell-ink); border: 3px solid var(--shell-edge);
+  border-radius: 24px 24px 44px 44px; padding: var(--s3) var(--s3) var(--s4); position: relative;
+  box-shadow: 6px 7px 0 rgba(0, 0, 0, .3); }
+.phone__ear { width: 56px; height: 8px; margin: var(--s1) auto var(--s3); background: var(--shell-edge); border-radius: 5px; opacity: .8; }
+.phone__brand { display: flex; justify-content: space-between; align-items: center; gap: var(--s2); margin-bottom: var(--s2);
+  font-family: var(--label); font-weight: 800; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
+.phone__brand span:first-child { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.leds { display: inline-flex; gap: 6px; flex: none; }
+.leds i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--shell-edge); display: block; background: var(--candy); }
+.leds i + i { background: var(--gold); }
+.screw { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: var(--gold); border: 1.5px solid var(--shell-edge); display: none; }
+.screw::after { content: ""; position: absolute; left: 1px; right: 1px; top: 2.5px; height: 1.5px; background: var(--shell-edge); }
+.screw.tl { top: 10px; left: 12px; } .screw.tr { top: 10px; right: 12px; }
+.screw.bl { bottom: 14px; left: 18px; } .screw.br { bottom: 14px; right: 18px; }
+
+/* ---------- the screen ---------- */
+.lcd { background: var(--lcd); color: var(--lcd-ink); border: 3px solid var(--shell-edge); border-radius: 6px;
+  position: relative; overflow: hidden; display: flex; flex-direction: column; height: clamp(380px, 58vh, 500px); }
+.lcd * { font-family: var(--lcd-font); }
+.lcd__status { flex: none; display: flex; justify-content: space-between; align-items: center; gap: var(--s2);
+  padding: 6px 8px 5px; border-bottom: 1px solid var(--lcd-dim); font-size: 10px; }
+.lcd__status .net { flex: 1; min-width: 0; text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; letter-spacing: .04em; }
+.bars { display: inline-flex; gap: 1px; align-items: flex-end; flex: none; }
+.bars i { display: block; width: 3px; background: var(--lcd-ink); }
+.bars i:nth-child(1) { height: 3px; } .bars i:nth-child(2) { height: 5px; } .bars i:nth-child(3) { height: 7px; }
+.bars i:nth-child(4) { height: 9px; opacity: .3; }
+.batt { position: relative; display: inline-block; width: 17px; height: 9px; border: 1px solid var(--lcd-ink); flex: none; }
+.batt::before { content: ""; position: absolute; left: 1px; top: 1px; bottom: 1px; width: 10px; background: var(--lcd-ink); }
+.lcd__view { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: var(--s2) var(--s3) var(--s3);
+  scrollbar-width: thin; scrollbar-color: var(--lcd-ink) transparent; }
+.screen { display: none; }
+.screen.is-on { display: block; animation: screenIn .18s steps(3) both; }
+@keyframes screenIn { from { opacity: .2; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+.screen h2 { font-size: 12px; line-height: 1.45; letter-spacing: .04em; font-weight: 400; margin-bottom: var(--s2);
+  border-bottom: 1px solid var(--lcd-dim); padding-bottom: 5px; display: flex; justify-content: space-between;
+  align-items: baseline; gap: var(--s2); overflow-wrap: anywhere; }
+.screen h2:focus { outline: none; }
+.pos { flex: none; font-size: 10px; background: var(--lcd-ink); color: var(--lcd); padding: 2px 5px; }
+.body, .body * { font-family: var(--lcd-body); }
+.body { font-size: 13px; line-height: 1.62; overflow-wrap: anywhere; }
+.body p, .body ul, .body ol, .body blockquote { margin-bottom: var(--s2); }
+.body ul, .body ol { padding-left: 1.3em; }
+.body h3 { font-size: 13px; margin: var(--s3) 0 var(--s1); }
+.body a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 2px; }
+.body blockquote { border-left: 3px solid var(--lcd-ink); padding-left: var(--s2); }
+.body code { font-family: var(--mono); background: color-mix(in srgb, var(--lcd-ink) 14%, transparent); padding: 0 3px; }
+.nextcue { font-size: 11px; border-top: 1px solid var(--lcd-dim); margin-top: var(--s3); padding-top: var(--s2); overflow-wrap: anywhere; }
+.nextcue b { font-weight: 400; background: var(--lcd-ink); color: var(--lcd); padding: 1px 5px; }
+
+/* splash */
+#scr-splash { text-align: center; padding-top: var(--s5); }
+.splash-art { display: block; margin: 0 auto var(--s4); color: var(--lcd-hi); }
+.splash-title { font-size: 15px; line-height: 1.35; overflow-wrap: anywhere; }
+.splash-meta { font-size: 10px; margin-top: var(--s2); color: var(--lcd-dim); }
+.splash-go { font-size: 10px; margin-top: var(--s5); letter-spacing: .1em; animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* menu */
+.menu { list-style: none; }
+.menu li { margin-bottom: 2px; }
+.menu button { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: var(--s2);
+  background: none; border: 0; cursor: pointer; text-align: left; font-size: 12px; line-height: 1.25;
+  color: var(--lcd-ink); padding: 9px 6px; min-height: 40px; }
+.menu button .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.menu button .st { flex: none; font-size: 9.5px; opacity: .8; }
+.menu button:hover { background: color-mix(in srgb, var(--lcd-ink) 12%, transparent); }
+.menu button[aria-current="true"] { background: var(--lcd-hi); color: var(--lcd-hi-ink); }
+.menu-foot { font-size: 9.5px; color: var(--lcd-dim); border-top: 1px solid var(--lcd-dim); margin-top: var(--s2); padding-top: 6px; line-height: 1.7; }
+
+/* games */
+.locklist { list-style: none; margin: var(--s2) 0; }
+.locklist li { display: flex; gap: var(--s2); font-size: 11.5px; line-height: 1.5; padding: 3px 0; }
+.locklist li span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.locklist .mark { flex: none; width: 22px; text-align: center; border: 1px solid var(--lcd-ink); }
+.lock-note { font-size: 11px; line-height: 1.6; }
+.hud { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 6px; }
+#snake { width: 100%; max-width: 288px; height: auto; display: block; margin: 0 auto; border: 2px solid var(--lcd-ink);
+  image-rendering: pixelated; touch-action: none; background: var(--game-bg); }
+.game-msg { font-size: 10.5px; line-height: 1.6; margin-top: var(--s2); min-height: 34px; text-align: center; }
+.play-btn { display: block; width: 100%; max-width: 288px; margin: var(--s2) auto 0; cursor: pointer; background: var(--lcd-hi);
+  color: var(--lcd-hi-ink); border: 2px solid var(--lcd-ink); font-size: 12px; letter-spacing: .08em; padding: 11px 10px; min-height: 46px; }
+
+/* share */
+.share-link { margin-top: var(--s2); font-size: 11px; padding: var(--s2); border: 1px dashed var(--lcd-ink); overflow-wrap: anywhere; user-select: all; }
+
+/* ---------- soft keys and keypad ---------- */
+.nav { display: flex; gap: var(--s3); margin: var(--s4) 0 var(--s3); }
+.soft { flex: 1; background: var(--soft); color: var(--soft-ink); border: 2px solid var(--key-edge); border-radius: 18px 18px 8px 8px;
+  box-shadow: 0 4px 0 var(--key-edge); cursor: pointer; min-height: 50px; padding: 8px; font-family: var(--label);
+  font-weight: 800; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; transition: transform .06s, box-shadow .06s; }
+.soft:active { transform: translateY(4px); box-shadow: 0 0 0 var(--key-edge); }
+.soft:disabled { opacity: .45; cursor: default; }
+.keypad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.key { background: var(--key); color: var(--key-ink); border: 2px solid var(--key-edge); border-radius: 8px;
+  box-shadow: 0 3px 0 var(--key-edge); cursor: pointer; padding: 7px 3px 6px; min-height: 52px; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  transition: transform .06s, box-shadow .06s; }
+.key:active { transform: translateY(3px); box-shadow: 0 0 0 var(--key-edge); }
+.key:disabled { opacity: .4; cursor: default; }
+.key b { font-family: var(--mono); font-size: 17px; font-weight: 500; line-height: 1; }
+.key span { font-family: var(--label); font-weight: 800; font-size: 8.5px; letter-spacing: .08em; line-height: 1.1;
+  text-transform: uppercase; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.key--hot { background: var(--key-hot); color: var(--key-hot-ink); }
+.key--zero { grid-column: 2; }
+.hint { max-width: 46ch; text-align: center; font-family: var(--mono); font-size: 11px; line-height: 1.8; letter-spacing: .04em; }
+
+/* ---------- the email gate (gated twin only) ---------- */
+#gate[hidden] { display: none; }
+body.gated { overflow: hidden; }
+#gate { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: var(--s4);
+  background: color-mix(in srgb, var(--ground) 92%, transparent); }
+.gate-card { width: min(420px, 100%); background: var(--cream); color: var(--ink); border: 3px solid var(--ink); padding: var(--s5);
+  box-shadow: 6px 7px 0 rgba(0, 0, 0, .35); max-height: 100%; overflow-y: auto; }
+.gate-card .kicker { font-family: var(--label); font-weight: 800; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--wine); }
+.gate-card h2 { font-family: var(--serif); font-weight: 900; font-size: 30px; line-height: 1.05; margin: var(--s2) 0; overflow-wrap: anywhere; }
+.gate-card p { font-family: var(--body); font-size: 15px; }
+.gate-card form { display: flex; flex-direction: column; gap: var(--s2); margin-top: var(--s4); }
+.gate-card label { font-family: var(--label); font-weight: 800; font-size: 12px; }
+.gate-card input { font: 16px var(--mono); padding: 12px; border: 2px solid var(--ink); background: #fff; color: var(--ink); width: 100%; }
+.gate-go { font-family: var(--label); font-weight: 800; font-size: 15px; padding: 14px; min-height: 52px; cursor: pointer;
+  background: var(--candy); color: var(--ink); border: 2px solid var(--ink); box-shadow: 0 4px 0 var(--ink); }
+.gate-go:disabled { opacity: .6; }
+.gate-msg { min-height: 1.4em; font-family: var(--label); font-size: 13px; color: var(--marker); }
+.gate-fine { font-family: var(--mono); font-size: 11px; margin-top: var(--s3); opacity: .8; }
+
+@media (max-width: 560px) {
+  .stage { padding: var(--s4) var(--s4) var(--s5); }
+  .phone { padding: var(--s2) var(--s2) var(--s3); border-radius: 20px 20px 36px 36px; }
+  .body { font-size: 13.5px; }
+  .menu button { font-size: 13px; min-height: 46px; }
+  .soft { min-height: 54px; }
+  .key { min-height: 56px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* cyberpunk: the girly terminal. Plum LCD with pixel type and soft scanlines (no glow, no flicker),
+   an ink handset with gold screws and candy and gold status LEDs, a prompt line with a candy block cursor. */
+body.m-cyberpunk {
+  --page-bg: var(--ground); --page-ink: var(--cream);
+  --shell: var(--ink); --shell-edge: color-mix(in srgb, var(--ink) 70%, #000); --shell-ink: var(--gold);
+  --lcd: var(--plum); --lcd-ink: var(--cream); --lcd-dim: color-mix(in srgb, var(--cream) 50%, var(--plum));
+  --lcd-hi: var(--candy); --lcd-hi-ink: var(--ink); --lcd-font: var(--pixel); --lcd-body: var(--mono);
+  --key: var(--wine); --key-ink: var(--cream); --key-edge: color-mix(in srgb, var(--ink) 70%, #000);
+  --key-hot: var(--candy); --key-hot-ink: var(--ink);
+  --soft: var(--plum); --soft-ink: var(--gold);
+  --game-bg: color-mix(in srgb, var(--plum) 80%, #000); --game-ink: var(--cream); --game-apple: var(--candy);
+  background-image: linear-gradient(to bottom, color-mix(in srgb, var(--ground) 70%, #000), var(--ground) 340px);
+}
+.m-cyberpunk .screw { display: block; }
+.m-cyberpunk .phone { padding-top: 22px; }
+.m-cyberpunk .phone__ear { background: var(--gold); opacity: .5; }
+.m-cyberpunk .lcd::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 5;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 2px, color-mix(in srgb, var(--ink) 16%, transparent) 2px 3px); }
+.m-cyberpunk .soft { border-color: var(--gold); box-shadow: 0 4px 0 color-mix(in srgb, var(--ink) 70%, #000); font-family: var(--pixel); font-weight: 400; letter-spacing: .08em; }
+.m-cyberpunk .key span { font-family: var(--pixel); font-weight: 400; letter-spacing: .02em; }
+
+.cp-head { width: min(380px, 100%); font-family: var(--mono); }
+.cp-head .prompt { font-family: var(--mono); font-size: 13px; color: var(--candy); overflow-wrap: anywhere; }
+.cp-head .prompt b { color: var(--cream); font-weight: 400; }
+.cursor { display: inline-block; width: .6em; height: 1.05em; background: var(--candy); vertical-align: -2px; margin-left: 2px;
+  animation: blink 1.1s steps(1) infinite; }
+.cp-head h1 { font-family: var(--serif); font-weight: 900; font-size: clamp(34px, 9vw, 52px); line-height: .98; margin: 10px 0 6px;
+  color: var(--cream); overflow-wrap: anywhere; }
+.cp-head .meta { font-family: var(--pixel); font-size: 11px; color: var(--gold); letter-spacing: .06em; }
+.cp-head .meta span + span::before { content: " · "; }
+.m-cyberpunk .deck { color: var(--cream); }
+.m-cyberpunk .deck b { color: var(--candy); }
+.m-cyberpunk .hint { color: color-mix(in srgb, var(--cream) 75%, var(--ground)); }
+.cp-bar { font-family: var(--pixel); font-size: 11px; color: var(--gold); letter-spacing: .04em; width: min(380px, 100%);
+  display: flex; justify-content: space-between; gap: 8px; }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,900&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;800&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen&amp;display=swap">
+<style>:root { --ground: #50163C; --wine: #682047; --candy: #FE9DCA; --paper: #FFE3F1; --cream: #FFF7F4; --ink: #3B1230; --marker: #C2246E; --plum: #50163C; --gold: #E9B949; --serif: "Fraunces", Georgia, "Times New Roman", serif; --body: "Fraunces", Georgia, serif; --label: "Bricolage Grotesque", system-ui, "Helvetica Neue", Arial, sans-serif; --mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace; --scrawl: "Permanent Marker", "Marker Felt", "Comic Sans MS", cursive; --pixel: "Silkscreen", "Pixelify Sans", ui-monospace, monospace; }</style>
+</head>
+<body class="m-cyberpunk">
+<div class="stage"><header class="cp-head"><p class="prompt">handset:~$ <b>open the-pocket-post-n-01</b><span class="cursor" aria-hidden="true"></span></p>
+<h1>The Pocket Post</h1><p class="meta"><span>N°01</span><span>November 2026</span></p></header>
+<p class="deck"><b>Pick up the phone.</b> Press 1 to 6 to read. Read all 6 and Snake unlocks on 7.</p><div class="phone" id="phone">
+<i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
+<div class="phone__ear"></div>
+<div class="phone__brand"><span>Pocket Post</span><span class="leds" aria-hidden="true"><i></i><i></i></span></div>
+<div class="lcd">
+<div class="lcd__status"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+<span class="net">The Pocket Post</span><span class="batt" aria-hidden="true"></span></div>
+<div class="lcd__view" id="view" tabindex="0" role="region" aria-label="Phone screen">
+<section class="screen is-on" id="scr-splash" aria-label="Starting up"><svg class="splash-art" viewBox="0 0 13 11" width="78" height="66" aria-hidden="true" shape-rendering="crispEdges"><path fill="currentColor" d="M2 0h3v1h1v1h1V1h1V0h3v1h1v1h1v4h-1v1h-1v1h-1v1h-1v1H8v1H5v-1H4V9H3V8H2V7H1V6H0V2h1V1h1z"/></svg>
+<p class="splash-title">The Pocket Post</p><p class="splash-meta">N°01 · November 2026</p><p class="splash-go">PRESS ANY KEY</p></section>
+<section class="screen" id="scr-menu" aria-label="Menu"><h2 tabindex="-1"><span>Menu</span><span class="pos">N°01</span></h2>
+<ul class="menu"><li><button type="button" data-go="1"><span class="t">1 Hello from the kiln</span><span class="st" data-st="1">new</span></button></li><li><button type="button" data-go="2"><span class="t">2 Three things I tried</span><span class="st" data-st="2">new</span></button></li><li><button type="button" data-go="3"><span class="t">3 The piece of the month</span><span class="st" data-st="3">new</span></button></li><li><button type="button" data-go="4"><span class="t">4 On my desk</span><span class="st" data-st="4">new</span></button></li><li><button type="button" data-go="5"><span class="t">5 Dates for your diary</span><span class="st" data-st="5">new</span></button></li><li><button type="button" data-go="6"><span class="t">6 One last thing</span><span class="st" data-st="6">new</span></button></li><li><button type="button" data-go="7"><span class="t">7 Games</span><span class="st" id="gameSt">LOCKED 0/6</span></button></li></ul>
+<p class="menu-foot">8 share · 9 write to Juniper Vale · 0 menu</p></section>
+<section class="screen" id="scr-1" aria-label="Hello from the kiln"><h2 tabindex="-1"><span>Hello from the kiln</span><span class="pos">1/6</span></h2><div class="body"><p>The kiln is warm again. This month the studio moved two doors down, onto the corner with the good light.</p><p>Here is everything new, in six short screens. Read them all and Snake is yours.</p></div><p class="nextcue">NEXT <b>Three things I tried</b></p></section><section class="screen" id="scr-2" aria-label="Three things I tried"><h2 tabindex="-1"><span>Three things I tried</span><span class="pos">2/6</span></h2><div class="body"><ol><li><b>Glazing on Sundays only.</b> Fewer cracks, calmer weeks.</li><li><b>One class a month, eight seats.</b> It filled in a day.</li><li><b>Writing this letter by voice note.</b> You are reading the result.</li></ol></div><p class="nextcue">NEXT <b>The piece of the month</b></p></section><section class="screen" id="scr-3" aria-label="The piece of the month"><h2 tabindex="-1"><span>The piece of the month</span><span class="pos">3/6</span></h2><div class="body"><p>A speckled cream mug with a thumb rest, made in a batch of twelve.</p><p>Every one is a little different. That is the point.</p></div><p class="nextcue">NEXT <b>On my desk</b></p></section><section class="screen" id="scr-4" aria-label="On my desk"><h2 tabindex="-1"><span>On my desk</span><span class="pos">4/6</span></h2><div class="body"><ul><li>A notebook of glaze recipes, half of them failures</li><li>A postcard from a student in Wren Harbour</li><li>A list titled <i>things I will not do this winter</i></li></ul></div><p class="nextcue">NEXT <b>Dates for your diary</b></p></section><section class="screen" id="scr-5" aria-label="Dates for your diary"><h2 tabindex="-1"><span>Dates for your diary</span><span class="pos">5/6</span></h2><div class="body"><p><b>Sat 7 Nov.</b> Open studio, 10 till 4.</p><p><b>Sat 21 Nov.</b> Wheel class, eight seats.</p><p><b>Sun 13 Dec.</b> The winter shelf sale.</p></div><p class="nextcue">NEXT <b>One last thing</b></p></section><section class="screen" id="scr-6" aria-label="One last thing"><h2 tabindex="-1"><span>One last thing</span><span class="pos">6/6</span></h2><div class="body"><p>If this landed for you, press 8 and pass it to one friend who would love a slower inbox.</p><p>See you next month.<br>Juniper</p></div><p class="nextcue">NEXT <b>Games</b></p></section>
+<section class="screen" id="scr-7" aria-label="Games"><h2 tabindex="-1"><span>Games</span><span class="pos">7</span></h2>
+<div id="lockBox"><p class="lock-note">Snake unlocks when every section is read. Your checklist:</p>
+<ul class="locklist" id="lockList"><li><span class="mark" data-lk="1">.</span><span>1 Hello from the kiln</span></li><li><span class="mark" data-lk="2">.</span><span>2 Three things I tried</span></li><li><span class="mark" data-lk="3">.</span><span>3 The piece of the month</span></li><li><span class="mark" data-lk="4">.</span><span>4 On my desk</span></li><li><span class="mark" data-lk="5">.</span><span>5 Dates for your diary</span></li><li><span class="mark" data-lk="6">.</span><span>6 One last thing</span></li></ul></div>
+<div id="gameBox" hidden><div class="hud"><span>SCORE <b id="score">000</b></span><span>HI <b id="hi">000</b></span></div>
+<canvas id="snake" width="288" height="216" aria-label="Snake. Press Play, then steer with the arrow keys."></canvas>
+<button type="button" class="play-btn" id="playBtn">PLAY</button><p class="game-msg" id="gameMsg" aria-live="polite"></p></div></section>
+<section class="screen" id="scr-share" aria-label="Share"><h2 tabindex="-1"><span>Share</span><span class="pos">8</span></h2>
+<p class="lock-note" id="shareMsg" aria-live="polite">Copy this link and send it on:</p><p class="share-link" id="shareLink"></p></section>
+</div></div>
+<div class="nav"><button type="button" class="soft" id="navBack" disabled>Back</button>
+<button type="button" class="soft" id="navNext">Next</button></div>
+<div class="keypad" id="keypad"><button type="button" class="key" data-key="1" aria-label="1, Hello from the kiln"><b>1</b><span>Hello</span></button><button type="button" class="key" data-key="2" aria-label="2, Three things I tried"><b>2</b><span>Tried</span></button><button type="button" class="key" data-key="3" aria-label="3, The piece of the month"><b>3</b><span>Piece</span></button><button type="button" class="key" data-key="4" aria-label="4, On my desk"><b>4</b><span>Desk</span></button><button type="button" class="key" data-key="5" aria-label="5, Dates for your diary"><b>5</b><span>Dates</span></button><button type="button" class="key" data-key="6" aria-label="6, One last thing"><b>6</b><span>Last</span></button><button type="button" class="key key--hot" data-key="7" aria-label="7, Snake, locked"><b>7</b><span>Snake</span></button><button type="button" class="key" data-key="8" aria-label="8, share"><b>8</b><span>Share</span></button><button type="button" class="key" data-key="9" aria-label="9, write to the author"><b>9</b><span>Write</span></button><button type="button" class="key key--zero" data-key="0" aria-label="0, menu"><b>0</b><span>Menu</span></button></div>
+</div>
+<p class="cp-bar"><span>[######] 6 sections</span><span>7 = snake</span></p><p class="hint">Keys: 1 to 6 sections · 7 Snake · 8 share · 9 write · 0 menu. Arrow keys work too.</p></div>
+
+<script type="application/json" id="handset-config">{"slug": "the-pocket-post-n-01", "title": "The Pocket Post", "keys": ["1", "2", "3", "4", "5", "6"], "sections": [{"key": "1", "title": "Hello from the kiln"}, {"key": "2", "title": "Three things I tried"}, {"key": "3", "title": "The piece of the month"}, {"key": "4", "title": "On my desk"}, {"key": "5", "title": "Dates for your diary"}, {"key": "6", "title": "One last thing"}], "share": {"url": "https://example.com/pocket-post", "text": "The Pocket Post is a phone you can play."}, "author": {"name": "Juniper Vale", "email": "hello@example.com", "url": "https://example.com"}, "gate": {"enabled": false}}</script>
+<script>/* handset logic: pure functions only, no DOM. The page inlines this file and the tests import it.
+   Screens are strings: "splash", "menu", "1".."6" (sections), "7" (games), "share". */
+(function (root, factory) {
+  var api = factory();
+  if (typeof module === "object" && module.exports) { module.exports = api; }
+  else { root.HandsetLogic = api; }
+}(typeof self !== "undefined" ? self : this, function () {
+  "use strict";
+
+  var CODE_RE = /^[A-Z0-9]{3,20}$/;
+  var EMAIL_RE = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']{2,}$/;
+
+  /* How many of the edition's section keys have been read. */
+  function readCount(read, keys) {
+    var n = 0;
+    for (var i = 0; i < keys.length; i++) { if (read && read[keys[i]] === true) { n++; } }
+    return n;
+  }
+
+  /* Snake is earned: every section in the edition read, and at least one section exists. */
+  function isUnlocked(read, keys) {
+    return keys.length > 0 && readCount(read, keys) === keys.length;
+  }
+
+  /* Opening a section marks it read. Returns a new object; never mutates the old one.
+     Only real section keys count, so opening the menu or the games screen marks nothing. */
+  function markRead(read, key, keys) {
+    var next = {};
+    var k;
+    for (k in read) { if (Object.prototype.hasOwnProperty.call(read, k)) { next[k] = read[k]; } }
+    if (keys.indexOf(String(key)) !== -1) { next[String(key)] = true; }
+    return next;
+  }
+
+  /* The x-mark checklist on the games screen: one row per section, "x" read or "." not yet. */
+  function checklist(read, sections) {
+    return sections.map(function (s) {
+      return { key: s.key, title: s.title, mark: read && read[s.key] === true ? "x" : "." };
+    });
+  }
+
+  /* The status line next to Games on the menu. */
+  function lockLabel(read, keys) {
+    return isUnlocked(read, keys) ? "PLAY" : "LOCKED " + readCount(read, keys) + "/" + keys.length;
+  }
+
+  /* Parse stored progress safely. Anything odd becomes an empty record. */
+  function parseRead(raw) {
+    if (!raw) { return {}; }
+    try {
+      var v = JSON.parse(raw);
+      if (!v || typeof v !== "object" || Array.isArray(v)) { return {}; }
+      var out = {};
+      for (var k in v) { if (/^[1-6]$/.test(k) && v[k] === true) { out[k] = true; } }
+      return out;
+    } catch (err) {
+      return {};
+    }
+  }
+
+  /* NEXT and BACK walk one road through the edition: sections in order, then games, then the menu. */
+  function nextScreen(current, keys) {
+    if (current === "splash" || current === "share") { return "menu"; }
+    if (current === "menu") { return keys.length ? keys[0] : "7"; }
+    if (current === "7") { return "menu"; }
+    var i = keys.indexOf(current);
+    if (i === -1) { return "menu"; }
+    return i + 1 < keys.length ? keys[i + 1] : "7";
+  }
+
+  function prevScreen(current, keys) {
+    if (current === "splash" || current === "menu" || current === "share") { return "menu"; }
+    if (current === "7") { return keys.length ? keys[keys.length - 1] : "menu"; }
+    var i = keys.indexOf(current);
+    return i > 0 ? keys[i - 1] : "menu";
+  }
+
+  /* What each keypad key does. Returns {action, target}. Keys 1..6 with no section do nothing. */
+  function keyAction(k, keys) {
+    k = String(k);
+    if (/^[1-6]$/.test(k)) { return keys.indexOf(k) !== -1 ? { action: "open", target: k } : { action: "none" }; }
+    if (k === "7") { return { action: "open", target: "7" }; }
+    if (k === "8") { return { action: "share" }; }
+    if (k === "9") { return { action: "author" }; }
+    if (k === "0") { return { action: "open", target: "menu" }; }
+    return { action: "none" };
+  }
+
+  /* A deep link: #menu, #games, #share or #1..#6 (only sections that exist). */
+  function screenFromHash(hash, keys) {
+    var h = String(hash || "").replace(/^#/, "").toLowerCase();
+    if (h === "menu") { return "menu"; }
+    if (h === "games" || h === "7") { return "7"; }
+    if (h === "share") { return "share"; }
+    if (keys.indexOf(h) !== -1) { return h; }
+    return null;
+  }
+
+  function normaliseCode(raw) {
+    var c = String(raw || "").trim().toUpperCase();
+    return CODE_RE.test(c) ? c : null;
+  }
+
+  /* The email gate. A well-formed ?c=CODE in the link, or a code already saved on this device,
+     opens it. Without the gate (the public twin) it is always open. */
+  function gateState(opts) {
+    if (!opts || !opts.enabled) { return { open: true, code: null, via: "off" }; }
+    var fromUrl = null;
+    var m = /[?&]c=([^&#]*)/.exec(String(opts.search || ""));
+    if (m) {
+      try { fromUrl = normaliseCode(decodeURIComponent(m[1].replace(/\+/g, " "))); }
+      catch (err) { fromUrl = null; }
+    }
+    if (fromUrl) { return { open: true, code: fromUrl, via: "url" }; }
+    var saved = normaliseCode(opts.saved);
+    if (saved) { return { open: true, code: saved, via: "saved" }; }
+    return { open: false, code: null, via: "none" };
+  }
+
+  function validEmail(email) {
+    var e = String(email || "").trim();
+    return e.length <= 254 && EMAIL_RE.test(e);
+  }
+
+  /* What the gate sends to the endpoint. */
+  function gatePayload(email, code) {
+    return { email: String(email || "").trim(), code: normaliseCode(code) || "" };
+  }
+
+  /* The code to remember after a good reply: the server's own code if it sent one, else the edition code. */
+  function codeFromReply(data, fallback) {
+    var fromServer = data && typeof data === "object" ? normaliseCode(data.code) : null;
+    return fromServer || normaliseCode(fallback) || "OPEN";
+  }
+
+  /* The link SHARE hands on: the configured public link, else this page with no ?c= and no #hash,
+     so every friend meets the front door. */
+  function shareUrl(configured, href) {
+    var c = String(configured || "").trim();
+    if (/^https?:\/\//i.test(c)) { return c; }
+    return String(href || "").split("#")[0].split("?")[0];
+  }
+
+  return {
+    CODE_RE: CODE_RE, readCount: readCount, isUnlocked: isUnlocked, markRead: markRead,
+    checklist: checklist, lockLabel: lockLabel, parseRead: parseRead, nextScreen: nextScreen,
+    prevScreen: prevScreen, keyAction: keyAction, screenFromHash: screenFromHash,
+    normaliseCode: normaliseCode, gateState: gateState, validEmail: validEmail,
+    gatePayload: gatePayload, codeFromReply: codeFromReply, shareUrl: shareUrl
+  };
+}));
+
+/* handset page: screens, keypad, soft keys, share, the email gate and the earned Snake.
+   Reads its settings from <script type="application/json" id="handset-config">. Needs HandsetLogic. */
+(function () {
+  "use strict";
+  var L = window.HandsetLogic;
+  var cfgEl = document.getElementById("handset-config");
+  if (!L || !cfgEl) { return; }
+  var cfg;
+  try { cfg = JSON.parse(cfgEl.textContent); }
+  catch (err) { cfg = null; }
+  if (!cfg) { return; }
+
+  var KEYS = cfg.keys;                        // section keys in order, e.g. ["1","2","3","4","5","6"]
+  var NS = "handset:" + cfg.slug + ":";       // storage namespace, one per edition
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var touch = (window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches) ||
+              ("ontouchstart" in window);
+
+  function store(key, val) {
+    try { window.localStorage.setItem(NS + key, val); return true; }
+    catch (err) { return false; }           // private mode or blocked storage: progress lasts this visit
+  }
+  function recall(key) {
+    try { return window.localStorage.getItem(NS + key); }
+    catch (err) { return null; }
+  }
+
+  var view = document.getElementById("view");
+  var navBack = document.getElementById("navBack");
+  var navNext = document.getElementById("navNext");
+  var menuButtons = Array.prototype.slice.call(document.querySelectorAll("#scr-menu .menu button"));
+  var current = "splash";
+  var cursor = 0;
+  var read = L.parseRead(recall("read"));
+
+  /* ---------- the earned Snake: the lock, the checklist, the menu status ---------- */
+  function paintLock() {
+    var open = L.isUnlocked(read, KEYS);
+    var st = document.getElementById("gameSt");
+    if (st) { st.textContent = L.lockLabel(read, KEYS); }
+    L.checklist(read, cfg.sections).forEach(function (row) {
+      var m = document.querySelector('#lockList [data-lk="' + row.key + '"]');
+      if (m) { m.textContent = row.mark; }
+    });
+    KEYS.forEach(function (k) {
+      var s = document.querySelector('#scr-menu [data-st="' + k + '"]');
+      if (s) { s.textContent = read[k] ? "read" : "new"; }
+    });
+    document.getElementById("lockBox").hidden = open;
+    document.getElementById("gameBox").hidden = !open;
+    var key7 = document.querySelector('[data-key="7"]');
+    if (key7) { key7.setAttribute("aria-label", open ? "7, Snake, ready to play" : "7, Snake, locked"); }
+  }
+
+  function paintMenu() {
+    menuButtons.forEach(function (b, i) { b.setAttribute("aria-current", i === cursor ? "true" : "false"); });
+  }
+
+  function show(id, focusIt) {
+    var next = document.getElementById("scr-" + id);
+    if (!next) { return; }
+    Array.prototype.forEach.call(view.querySelectorAll(".screen"), function (s) { s.classList.remove("is-on"); });
+    next.classList.add("is-on");
+    if (current === "7" && id !== "7") { stopGame(); }
+    current = id;
+    view.scrollTop = 0;
+    if (KEYS.indexOf(id) !== -1 && !read[id]) {
+      read = L.markRead(read, id, KEYS);
+      store("read", JSON.stringify(read));
+    }
+    navBack.disabled = id === "splash" || id === "menu";
+    navNext.disabled = id === "splash";
+    navNext.textContent = id === "menu" ? "Open" : "Next";
+    paintLock();
+    if (id === "menu") { paintMenu(); }
+    if (focusIt !== false) {
+      var h = next.querySelector("h2");
+      if (h) { h.focus({ preventScroll: true }); }
+    }
+  }
+  window.handsetShow = function (id) { show(String(id), false); };  // used by the 390px layout test
+
+  function moveCursor(delta) {
+    cursor = (cursor + delta + menuButtons.length) % menuButtons.length;
+    paintMenu();
+    menuButtons[cursor].focus({ preventScroll: true });
+  }
+
+  menuButtons.forEach(function (b, i) {
+    b.addEventListener("click", function () { cursor = i; show(b.getAttribute("data-go")); });
+  });
+  navBack.addEventListener("click", function () { show(L.prevScreen(current, KEYS)); });
+  navNext.addEventListener("click", function () {
+    if (current === "menu") { show(menuButtons[cursor].getAttribute("data-go")); return; }
+    show(L.nextScreen(current, KEYS));
+  });
+
+  /* ---------- 8: share the public link, never the reader's ?c= link ---------- */
+  var shareMsg = document.getElementById("shareMsg");
+  var shareLink = document.getElementById("shareLink");
+  function share() {
+    var url = L.shareUrl(cfg.share.url, window.location.href);
+    var text = cfg.share.text || cfg.title;
+    show("share");
+    shareLink.textContent = url;
+    if (navigator.share) {
+      shareMsg.textContent = "Choose where to send it.";
+      navigator.share({ title: cfg.title, text: text, url: url }).then(function () {
+        shareMsg.textContent = "Sent. Thank you for passing it on.";
+      }, function () {
+        shareMsg.textContent = "No problem. The link is below if you want it.";
+      });
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () {
+        shareMsg.textContent = "Link copied. Paste it anywhere.";
+      }, function () {
+        shareMsg.textContent = "Copy this link and send it on:";
+      });
+      return;
+    }
+    shareMsg.textContent = "Copy this link and send it on:";
+  }
+
+  /* ---------- 9: the author ---------- */
+  function author() {
+    if (cfg.author.email) {
+      window.location.href = "mailto:" + cfg.author.email + "?subject=" + encodeURIComponent(cfg.title);
+    } else if (cfg.author.url) {
+      window.open(cfg.author.url, "_blank", "noopener");
+    }
+  }
+
+  /* ---------- keypad and keyboard ---------- */
+  function press(k) {
+    if (current === "splash") { show("menu"); return; }
+    if (playing() && /^[2468]$/.test(k)) { turn(k); return; }
+    var a = L.keyAction(k, KEYS);
+    if (a.action === "open") { show(a.target); }
+    else if (a.action === "share") { share(); }
+    else if (a.action === "author") { author(); }
+  }
+
+  document.getElementById("keypad").addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-key]");
+    if (btn && !btn.disabled) { press(btn.getAttribute("data-key")); }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (document.body.classList.contains("gated")) { return; }   // the gate form owns the keyboard
+    var t = e.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) { return; }
+    var k = e.key;
+    if (current === "splash") { show("menu"); e.preventDefault(); return; }
+    if (playing()) {
+      var steer = { ArrowUp: "2", ArrowDown: "8", ArrowLeft: "4", ArrowRight: "6" }[k];
+      if (steer) { turn(steer); e.preventDefault(); return; }
+    }
+    if (current === "menu" && (k === "ArrowDown" || k === "ArrowUp")) {
+      moveCursor(k === "ArrowDown" ? 1 : -1); e.preventDefault(); return;
+    }
+    if (k === "ArrowRight") { navNext.click(); e.preventDefault(); return; }
+    if (k === "ArrowLeft") { if (!navBack.disabled) { navBack.click(); } e.preventDefault(); return; }
+    if (k === "Escape") { show("menu"); e.preventDefault(); return; }
+    if (k === "Enter" && current === "menu") { navNext.click(); e.preventDefault(); return; }
+    if (k === "Enter" && current === "7" && L.isUnlocked(read, KEYS)) { startGame(); e.preventDefault(); return; }
+    if (/^[0-9]$/.test(k)) { press(k); }
+  });
+
+  /* ---------- the email gate (gated twin only) ---------- */
+  var gate = document.getElementById("gate");
+  if (gate) {
+    var state = L.gateState({ enabled: cfg.gate.enabled, search: window.location.search, saved: recall("code") });
+    if (state.open) {
+      if (state.code) { store("code", state.code); }
+      gate.hidden = true;
+    } else {
+      gate.hidden = false;
+      document.body.classList.add("gated");
+      var form = document.getElementById("gateForm");
+      var input = document.getElementById("gateEmail");
+      var btn = document.getElementById("gateGo");
+      var msg = document.getElementById("gateMsg");
+      var label = btn.textContent;
+      window.setTimeout(function () { input.focus(); }, 50);
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var email = input.value;
+        if (!L.validEmail(email)) { msg.textContent = "That email looks unfinished. Check it and try again."; input.focus(); return; }
+        btn.disabled = true;
+        btn.textContent = "One moment...";
+        msg.textContent = "";
+        window.fetch(cfg.gate.endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(L.gatePayload(email, cfg.gate.code))
+        }).then(function (res) {
+          if (!res.ok) { throw new Error("status " + res.status); }
+          return res.json().then(function (d) { return d; }, function () { return null; });
+        }).then(function (data) {
+          var code = L.codeFromReply(data, cfg.gate.code);
+          store("code", code);
+          try { window.history.replaceState({}, "", window.location.pathname + "?c=" + encodeURIComponent(code)); }
+          catch (err) { msg.textContent = ""; }   // file:// pages cannot rewrite the address; the code is saved anyway
+          gate.hidden = true;
+          document.body.classList.remove("gated");
+          show("menu");
+        }).catch(function () {
+          btn.disabled = false;
+          btn.textContent = label;
+          msg.textContent = cfg.author.email
+            ? "That did not go through. Try again in a minute, or write to " + cfg.author.email + "."
+            : "That did not go through. Try again in a minute.";
+        });
+      });
+    }
+  }
+
+  /* ================= SNAKE ================= */
+  var CELL = 12, COLS = 24, ROWS = 18;
+  var cv = document.getElementById("snake");
+  var ctx = cv.getContext("2d");
+  var scoreEl = document.getElementById("score");
+  var hiEl = document.getElementById("hi");
+  var gameMsg = document.getElementById("gameMsg");
+  var playBtn = document.getElementById("playBtn");
+  var SAY_START = touch ? "Tap Play, then swipe to steer." : "Press Play, then steer with the arrow keys or 2 4 6 8.";
+  var SAY_AGAIN = touch ? "Tap Play to go again." : "Press Play to go again.";
+  var HEART = [[0,1,0,0,1,0],[1,1,1,1,1,1],[1,1,1,1,1,1],[0,1,1,1,1,0],[0,0,1,1,0,0],[0,0,0,0,0,0]];
+  var snake, dir, nextDir, apple, score = 0, timer = null, alive = false, tick = 190;
+  var hi = parseInt(recall("hi") || "0", 10) || 0;
+
+  function pad(n) { return ("00" + n).slice(-3); }
+  function colour(name, fallback) {
+    var v = window.getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback;
+  }
+  function playing() { return current === "7" && alive; }
+
+  function placeApple() {
+    var free = [];
+    for (var x = 0; x < COLS; x++) {
+      for (var y = 0; y < ROWS; y++) {
+        var hit = snake.some(function (s) { return s.x === x && s.y === y; });
+        if (!hit) { free.push({ x: x, y: y }); }
+      }
+    }
+    apple = free.length ? free[Math.floor(Math.random() * free.length)] : { x: 0, y: 0 };
+  }
+
+  function reset() {
+    snake = [{ x: 8, y: 9 }, { x: 7, y: 9 }, { x: 6, y: 9 }];
+    dir = { x: 1, y: 0 };
+    nextDir = dir;
+    score = 0;
+    scoreEl.textContent = pad(score);
+    placeApple();
+    draw();
+  }
+
+  function draw() {
+    var bg = colour("--game-bg", "#FFF7F4"), fg = colour("--game-ink", "#3B1230"), heart = colour("--game-apple", "#C2246E");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = fg;
+    snake.forEach(function (s, i) {
+      ctx.fillRect(s.x * CELL + 1, s.y * CELL + 1, CELL - 2, CELL - 2);
+      if (i === 0) {
+        ctx.fillStyle = bg;
+        ctx.fillRect(s.x * CELL + 4, s.y * CELL + 4, CELL - 8, CELL - 8);
+        ctx.fillStyle = fg;
+      }
+    });
+    ctx.fillStyle = heart;
+    var px = CELL / 6;
+    for (var r = 0; r < 6; r++) {
+      for (var c = 0; c < 6; c++) {
+        if (HEART[r][c]) { ctx.fillRect(apple.x * CELL + c * px, apple.y * CELL + r * px + 1, px, px); }
+      }
+    }
+  }
+
+  function step() {
+    dir = nextDir;
+    var head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+    var crash = head.x < 0 || head.y < 0 || head.x >= COLS || head.y >= ROWS ||
+                snake.some(function (s) { return s.x === head.x && s.y === head.y; });
+    if (crash) { over(); return; }
+    snake.unshift(head);
+    if (head.x === apple.x && head.y === apple.y) {
+      score += 10;
+      scoreEl.textContent = pad(score);
+      placeApple();
+      if (tick > 130) { tick -= 5; window.clearInterval(timer); timer = window.setInterval(step, tick); }
+    } else {
+      snake.pop();
+    }
+    draw();
+  }
+
+  function over() {
+    stopGame();
+    if (score > hi) {
+      hi = score;
+      hiEl.textContent = pad(hi);
+      store("hi", String(hi));
+      gameMsg.textContent = "NEW HIGH SCORE " + pad(score) + ". " + SAY_AGAIN;
+    } else {
+      gameMsg.textContent = "GAME OVER. SCORE " + pad(score) + ". " + SAY_AGAIN;
+    }
+  }
+
+  function stopGame() {
+    window.clearInterval(timer);
+    timer = null;
+    alive = false;
+  }
+
+  function startGame() {
+    if (!L.isUnlocked(read, KEYS)) { show("7"); return; }
+    if (current !== "7") { show("7"); }
+    stopGame();
+    reset();
+    alive = true;
+    tick = 190;
+    gameMsg.textContent = touch ? "Swipe to steer." : "Steer with the arrow keys or 2 4 6 8.";
+    timer = window.setInterval(step, tick);
+  }
+
+  function turn(k) {
+    if (!alive) { return; }
+    var d = { "2": { x: 0, y: -1 }, "8": { x: 0, y: 1 }, "4": { x: -1, y: 0 }, "6": { x: 1, y: 0 } }[k];
+    if (!d || (d.x === -dir.x && d.y === -dir.y)) { return; }   // no instant reverse
+    nextDir = d;
+  }
+
+  /* Swipe anywhere on the screen to steer, only while playing, so swipes still scroll every other screen. */
+  var tx = 0, ty = 0;
+  function swipeStart(e) { tx = e.changedTouches[0].clientX; ty = e.changedTouches[0].clientY; }
+  function swipeEnd(e) {
+    var dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+    if (Math.abs(dx) < 16 && Math.abs(dy) < 16) { return; }
+    if (Math.abs(dx) > Math.abs(dy)) { turn(dx > 0 ? "6" : "4"); } else { turn(dy > 0 ? "8" : "2"); }
+  }
+  view.addEventListener("touchstart", function (e) { if (playing()) { swipeStart(e); } }, { passive: true });
+  view.addEventListener("touchend", function (e) { if (playing()) { swipeEnd(e); } }, { passive: true });
+  playBtn.addEventListener("click", startGame);
+  cv.addEventListener("click", function () { if (!alive) { startGame(); } });
+
+  hiEl.textContent = pad(hi);
+  gameMsg.textContent = SAY_START;
+  reset();
+
+  /* ---------- start: a deep link (#menu, #3, #games), else the splash then the menu ---------- */
+  var deep = L.screenFromHash(window.location.hash, KEYS);
+  paintLock();
+  if (deep) { show(deep, false); }
+  else if (reduced) { show("menu", false); }
+  else { window.setTimeout(function () { if (current === "splash") { show("menu", false); } }, 2400); }
+}());
+</script>
+</body></html>

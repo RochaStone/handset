@@ -1,0 +1,51 @@
+/* y2k-blog: the 2003 blog page. A cream OS 9 window, plum title bar, three gold buttons, a sidebar with
+   about me, currently reading, mood, a hit counter and a guestbook. Gold pixel hearts and stars only. */
+body.m-y2k-blog {
+  --page-bg: var(--paper); --page-ink: var(--ink);
+  --shell: var(--wine); --shell-edge: var(--ink); --shell-ink: var(--cream);
+  --lcd: var(--cream); --lcd-ink: var(--ink); --lcd-dim: color-mix(in srgb, var(--ink) 45%, var(--cream));
+  --lcd-hi: var(--candy); --lcd-hi-ink: var(--ink); --lcd-font: var(--pixel); --lcd-body: var(--mono);
+  --key: var(--paper); --key-ink: var(--ink); --key-edge: var(--ink);
+  --key-hot: var(--candy); --key-hot-ink: var(--ink);
+  --soft: var(--cream); --soft-ink: var(--ink);
+  --game-bg: var(--cream); --game-ink: var(--ink); --game-apple: var(--marker);
+  background-image: conic-gradient(var(--paper) 25%, color-mix(in srgb, var(--candy) 30%, var(--paper)) 0 50%,
+                                   var(--paper) 0 75%, color-mix(in srgb, var(--candy) 30%, var(--paper)) 0);
+  background-size: 28px 28px;
+}
+.px { font-family: var(--pixel); letter-spacing: .03em; }
+.pix { display: inline-block; vertical-align: -2px; color: var(--gold); }
+.win { width: min(1000px, 100%); background: var(--cream); color: var(--ink); border: 2px solid var(--ink); box-shadow: 6px 6px 0 rgba(0, 0, 0, .28); }
+.titlebar { position: relative; display: flex; align-items: center; height: 34px; padding: 0 10px; background: var(--ground);
+  background-image: repeating-linear-gradient(to bottom, transparent 0 3px, color-mix(in srgb, var(--cream) 10%, transparent) 3px 4px);
+  border-bottom: 2px solid var(--ink); }
+.btns { display: flex; gap: 6px; z-index: 1; }
+.btns i { width: 14px; height: 14px; background: var(--gold); border: 1.5px solid var(--ink); display: block; }
+.titlebar .title { position: absolute; left: 60px; right: 60px; text-align: center; color: var(--cream); font-size: 13px;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.marquee { overflow: hidden; white-space: nowrap; border-bottom: 1.5px dashed color-mix(in srgb, var(--ink) 40%, transparent);
+  font-family: var(--mono); font-size: 13px; color: var(--wine); padding: 5px 0; }
+.marquee span { display: inline-block; padding-left: 100%; animation: marquee 22s linear -9s infinite; }
+@keyframes marquee { to { transform: translateX(-100%); } }
+@media (prefers-reduced-motion: reduce) { .marquee span { padding-left: 12px; } }
+.winbody { display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 16px; padding: 18px; }
+.post { display: flex; flex-direction: column; align-items: center; gap: 14px; min-width: 0; }
+.post h1 { font-family: var(--serif); font-weight: 900; font-size: clamp(30px, 6vw, 46px); line-height: 1; text-align: center; color: var(--wine); overflow-wrap: anywhere; }
+.m-y2k-blog .deck { color: var(--ink); }
+.m-y2k-blog .hint { color: var(--ink); }
+.side { display: flex; flex-direction: column; gap: 12px; font-family: var(--label); font-size: 14px; min-width: 0; }
+.side section { border: 1.5px solid var(--ink); background: var(--paper); }
+.side h3 { background: var(--wine); color: var(--cream); font-size: 12px; font-weight: 400; padding: 4px 8px; text-transform: lowercase; }
+.side p { padding: 8px; line-height: 1.35; overflow-wrap: anywhere; }
+.side a { color: var(--wine); font-weight: 800; }
+.counter b { display: inline-block; margin-top: 4px; font-family: var(--mono); font-weight: 500; font-size: 17px; letter-spacing: .12em;
+  background: var(--ink); color: var(--cream); padding: 2px 8px; }
+.sparkle { text-align: center; }
+.sparkle .pix { margin: 0 4px; }
+.updated { font-family: var(--mono); font-size: 12px; text-align: center; opacity: .8; }
+@media (max-width: 760px) {
+  .winbody { grid-template-columns: minmax(0, 1fr); padding: 12px 10px; }
+}
+@media (max-width: 560px) {
+  body.m-y2k-blog .stage { padding: 12px 8px 24px; }
+}

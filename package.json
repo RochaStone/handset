@@ -1,0 +1,7 @@
+{
+  "name": "handset",
+  "private": true,
+  "type": "commonjs",
+  "description": "Pins plain scripts for the Node logic tests. No dependencies.",
+  "scripts": { "test": "node --test tests/logic.test.mjs && python3 -m unittest discover -s tests" }
+}

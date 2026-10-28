@@ -1,0 +1,33 @@
+{
+  "title": "The Pocket Post",
+  "issue": "N°01",
+  "date": "November 2026",
+  "brand": "Pocket Post",
+  "cta": "Pick up the phone",
+  "description": "The first Pocket Post from Juniper Vale's kiln studio in Port Halcyon, as a phone you can play.",
+  "sections": [
+    {"key": "1", "title": "Hello from the kiln", "label": "Hello",
+     "html": "<p>The kiln is warm again. This month the studio moved two doors down, onto the corner with the good light.</p><p>Here is everything new, in six short screens. Read them all and Snake is yours.</p>"},
+    {"key": "2", "title": "Three things I tried", "label": "Tried",
+     "html": "<ol><li><b>Glazing on Sundays only.</b> Fewer cracks, calmer weeks.</li><li><b>One class a month, eight seats.</b> It filled in a day.</li><li><b>Writing this letter by voice note.</b> You are reading the result.</li></ol>"},
+    {"key": "3", "title": "The piece of the month", "label": "Piece",
+     "html": "<p>A speckled cream mug with a thumb rest, made in a batch of twelve.</p><p>Every one is a little different. That is the point.</p>"},
+    {"key": "4", "title": "On my desk", "label": "Desk",
+     "html": "<ul><li>A notebook of glaze recipes, half of them failures</li><li>A postcard from a student in Wren Harbour</li><li>A list titled <i>things I will not do this winter</i></li></ul>"},
+    {"key": "5", "title": "Dates for your diary", "label": "Dates",
+     "html": "<p><b>Sat 7 Nov.</b> Open studio, 10 till 4.</p><p><b>Sat 21 Nov.</b> Wheel class, eight seats.</p><p><b>Sun 13 Dec.</b> The winter shelf sale.</p>"},
+    {"key": "6", "title": "One last thing", "label": "Last",
+     "html": "<p>If this landed for you, press 8 and pass it to one friend who would love a slower inbox.</p><p>See you next month.<br>Juniper</p>"}
+  ],
+  "share": {"url": "https://example.com/pocket-post", "text": "The Pocket Post is a phone you can play."},
+  "author": {"name": "Juniper Vale", "email": "hello@example.com", "url": "https://example.com"},
+  "gate": {
+    "enabled": true,
+    "endpoint": "https://example.com/api/subscribe",
+    "code": "POCKET01",
+    "headline": "The Pocket Post",
+    "text": "Leave your email and the phone is yours. The next edition arrives the same way.",
+    "button": "Pick up the phone",
+    "fine": "One email a month. Unsubscribe from any letter."
+  }
+}
